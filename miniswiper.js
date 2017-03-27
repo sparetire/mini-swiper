@@ -160,6 +160,19 @@ function Swiper(opts) {
 		x: 0,
 		y: 0
 	};
+
+	function translate(elem, x, y) {
+		if (elem.style.transform != undefined) {
+			translate = function (elem, x, y) {
+				elem.style.transform = 'translate3d('+x+'px, '+y+'px, 0px)';
+			};
+		} else {
+			translate = function (elem, x, y) {
+				elem.style.webkitTransform = 'translate3d('+x+'px, '+y+'px, 0px)';
+			};
+		}
+		translate(elem, x, y);
+	}
 	
 
 	if (typeof Swiper.prototype.slideTo != 'function') {
@@ -175,11 +188,7 @@ function Swiper(opts) {
 			}
 			ctx.onSlideChangeEnd(ctx);
 			$(wrapper).addClass('transition');
-			if (wrapper.style.transform != undefined) {
-				wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-			} else {
-				wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-			}
+			translate(wrapper, nextPoint.x, nextPoint.y);
 		};
 	}
 
@@ -212,11 +221,7 @@ function Swiper(opts) {
 				originEnd.x = originStart.x - (slideCount - 1) * interval;
 				curPoint.x -= ctx.initialSlide * interval;
 				lastStaticPoint.x = curPoint.x;
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d('+curPoint.x+'px, 0px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d('+curPoint.x+'px, 0px, 0px)'; 
-				}
+				translate(wrapper, curPoint.x, 0);
 			} else if (ctx.direction === 'vertical') {
 				wrapper.addClass('swiper-wrapper-vertical');
 				slides.forEach(function (slide) {
@@ -247,11 +252,7 @@ function Swiper(opts) {
 				originEnd.y = originStart.y - (slideCount - 1) * interval;
 				curPoint.y -= ctx.initialSlide * interval;
 				lastStaticPoint.y = curPoint.y;
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d(0px, '+curPoint.y+'px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d(0px, '+curPoint.y+'px, 0px)';
-				}
+				translate(wrapper, 0, curPoint.y);
 			}
 		};
 	}
@@ -274,17 +275,9 @@ function Swiper(opts) {
 		curPoint.x += dx;
 		curPoint.y += dy;
 		if (self.direction === 'horizontal') {
-			if (wrapper.style.transform != undefined) {
-				wrapper.style.transform = 'translate3d('+curPoint.x+'px, 0px, 0px)';
-			} else {
-				wrapper.style.webkitTransform = 'translate3d('+curPoint.x+'px, 0px, 0px)';
-			}
+			translate(wrapper, curPoint.x, 0);
 		} else {
-			if (wrapper.style.transform != undefined) {
-				wrapper.style.transform = 'translate3d(0px, '+curPoint.y+'px, 0px)';
-			} else {
-				wrapper.style.webkitTransform = 'translate3d(0px, '+curPoint.y+'px, 0px)';
-			}
+			translate(wrapper, 0, curPoint.y);
 		}
 		lastTouchPoint.x = curTouchPoint.x;
 		lastTouchPoint.y = curTouchPoint.y;
@@ -305,22 +298,14 @@ function Swiper(opts) {
 				curPoint.x = nextPoint.x = originStart.x;
 				curPoint.y = nextPoint.y = originStart.y;
 				$(this).addClass('transition');
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				}
+				translate(wrapper, nextPoint.x, nextPoint.y);
 				self.onSlideChangeEnd(self);
 				return;
 			} else if (self.activeIndex === slideCount - 1 && distanceX < 0) {
 				curPoint.x = nextPoint.x = originEnd.x;
 				curPoint.y = nextPoint.y = originEnd.y;
 				$(this).addClass('transition');
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				}
+				translate(wrapper, nextPoint.x, nextPoint.y);
 				self.onSlideChangeEnd(self);
 				return;
 			}
@@ -345,22 +330,14 @@ function Swiper(opts) {
 				curPoint.x = nextPoint.x = originStart.x;
 				curPoint.y = nextPoint.y = originStart.y;
 				$(this).addClass('transition');
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				}
+				translate(wrapper, nextPoint.x, nextPoint.y);
 				self.onSlideChangeEnd(self);
 				return;
 			} else if (self.activeIndex === slideCount - 1 && distanceY < 0) {
 				curPoint.x = nextPoint.x = originEnd.x;
 				curPoint.y = nextPoint.y = originEnd.y;
 				$(this).addClass('transition');
-				if (wrapper.style.transform != undefined) {
-					wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				} else {
-					wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-				}
+				translate(wrapper, nextPoint.x, nextPoint.y);
 				self.onSlideChangeEnd(self);
 				return;
 			}
@@ -384,11 +361,7 @@ function Swiper(opts) {
 		curPoint.x = nextPoint.x;
 		curPoint.y = nextPoint.y;
 		$(this).addClass('transition');
-		if (wrapper.style.transform != undefined) {
-			wrapper.style.transform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-		} else {
-			wrapper.style.webkitTransform = 'translate3d('+nextPoint.x+'px, '+nextPoint.y+'px, 0px)';
-		}
+		translate(wrapper, nextPoint.x, nextPoint.y);
 		self.onSlideChangeEnd(self);
 	});
 
