@@ -1,0 +1,29 @@
+.swiper-container {
+	overflow: hidden;
+}
+
+.swiper-wrapper {
+	white-space: nowrap;
+	float: left;
+	font-size: 0;
+}
+
+.swiper-wrapper-vertical {
+	white-space: normal;
+	float: none;
+	font-size: 0;
+}
+
+.swiper-slide {
+	font-size: 14px;
+	display: inline-block;
+}
+
+.swiper-slide-vertical {
+	font-size: 14px;
+	display: block;
+}
+
+.transition {
+	transition: all 0.3s ease;
+}

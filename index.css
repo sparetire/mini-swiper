@@ -1,0 +1,17 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.swiper-slide {
+	color: #fff;
+	width: 100px;
+	height: 100px;
+	padding: 50px;
+	border: 10px solid red;
+	background: #000;
+}
+
+.swiper-container {
+	height: 600px;
+}

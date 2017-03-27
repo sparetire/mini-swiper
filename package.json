@@ -1,0 +1,23 @@
+{
+  "name": "mini-swiper",
+  "version": "1.0.0",
+  "description": "A mini swiper for mobile",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sparetire/mini-swiper.git"
+  },
+  "keywords": [
+    "swiper",
+    "mobile"
+  ],
+  "author": "Sparetire",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/sparetire/mini-swiper/issues"
+  },
+  "homepage": "https://github.com/sparetire/mini-swiper#readme"
+}
