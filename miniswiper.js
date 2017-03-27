@@ -116,9 +116,11 @@ function Swiper(opts) {
 	// 滑动过渡结束的回调
 	self.onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
 	// container 内容区的宽度，private
-	var containerWidth = parseFloat(getComputedStyle(self.el).width);
+	var containerWidth = parseFloat(getComputedStyle(self.el)
+		.width);
 	// container 内容区的高度，private
-	var containerHeight = parseFloat(getComputedStyle(self.el).height);
+	var containerHeight = parseFloat(getComputedStyle(self.el)
+		.height);
 	// wrapper dom对象，private
 	var wrapper = this.el.find('.swiper-wrapper')[0];
 	// 所有的slide元素数组,private
@@ -166,16 +168,16 @@ function Swiper(opts) {
 		/* eslint no-func-assign: 0 */
 		if (elem.style.transform != undefined) {
 			translate = function (elem, x, y) {
-				elem.style.transform = 'translate3d('+x+'px, '+y+'px, 0px)';
+				elem.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
 			};
 		} else {
 			translate = function (elem, x, y) {
-				elem.style.webkitTransform = 'translate3d('+x+'px, '+y+'px, 0px)';
+				elem.style.webkitTransform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
 			};
 		}
 		translate(elem, x, y);
 	}
-	
+
 
 	if (typeof Swiper.prototype.slideTo != 'function') {
 		Swiper.prototype.slideTo = function (slide) {
@@ -186,7 +188,8 @@ function Swiper(opts) {
 			} else {
 				curPoint.y = nextPoint.y = originStart.y - slide * interval;
 			}
-			$(wrapper).addClass('transition');
+			$(wrapper)
+				.addClass('transition');
 			translate(wrapper, nextPoint.x, nextPoint.y);
 		};
 	}
@@ -215,7 +218,8 @@ function Swiper(opts) {
 			var slidePdRight = parseFloat(slideComputedSyle.paddingRight);
 			var slideBorderLeft = parseFloat(slideComputedSyle.borderLeftWidth);
 			var slideBorderRight = parseFloat(slideComputedSyle.borderRightWidth);
-			return slideWidth + slidePdLeft + slidePdRight + slideBorderLeft + slideBorderRight;
+			return slideWidth + slidePdLeft + slidePdRight + slideBorderLeft +
+				slideBorderRight;
 		},
 		getBoxHeight: function (elem) {
 			var slideComputedSyle = getComputedStyle(elem);
@@ -224,7 +228,8 @@ function Swiper(opts) {
 			var slidePdBottom = parseFloat(slideComputedSyle.paddingBottom);
 			var slideBorderTop = parseFloat(slideComputedSyle.borderTopWidth);
 			var slideBorderBottom = parseFloat(slideComputedSyle.borderBottomWidth);
-			return slideHeight + slidePdTop + slidePdBottom + slideBorderTop + slideBorderBottom;
+			return slideHeight + slidePdTop + slidePdBottom + slideBorderTop +
+				slideBorderBottom;
 		},
 		transformAxisX: function (slideBoxWidth) {
 			if (self.centeredSlides) {
@@ -247,6 +252,19 @@ function Swiper(opts) {
 			originEnd.y = originStart.y - (slideCount - 1) * interval;
 			curPoint.y -= self.initialSlide * interval;
 			lastStaticPoint.y = curPoint.y;
+		},
+		getMultiple: function (distance) {
+			var v = 0;
+			if (distance < 0) {
+				v = 1;
+			} else if (distance > 0) {
+				v = -1;
+			}
+			if (Math.abs(distance) % interval < interval / 2) {
+				return Math.floor(Math.abs(distance) / interval) * v;
+			} else {
+				return Math.ceil(Math.abs(distance) / interval) * v;
+			}
 		}
 	};
 
@@ -279,120 +297,69 @@ function Swiper(opts) {
 
 	self.init();
 
-	$(wrapper).on('touchstart', function (event) {
-		lastTouchPoint.x = startTouchPoint.x = event.targetTouches[0].screenX;
-		lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
-		lastStaticPoint.x = curPoint.x;
-		lastStaticPoint.y = curPoint.y;
-		self.onSlideChangeStart(self);
-	});
+	$(wrapper)
+		.on('touchstart', function (event) {
+			lastTouchPoint.x = startTouchPoint.x = event.targetTouches[0].screenX;
+			lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
+			lastStaticPoint.x = curPoint.x;
+			lastStaticPoint.y = curPoint.y;
+			self.onSlideChangeStart(self);
+		});
 
-	$(wrapper).on('touchmove', function (event) {
-		curTouchPoint.x = event.targetTouches[0].screenX;
-		curTouchPoint.y = event.targetTouches[0].screenY;
-		var dx = curTouchPoint.x - lastTouchPoint.x;
-		var dy = curTouchPoint.y - lastTouchPoint.y;
-		curPoint.x += dx;
-		curPoint.y += dy;
-		if (self.direction === 'horizontal') {
-			translate(wrapper, curPoint.x, 0);
-		} else {
-			translate(wrapper, 0, curPoint.y);
-		}
-		lastTouchPoint.x = curTouchPoint.x;
-		lastTouchPoint.y = curTouchPoint.y;
-	});
+	$(wrapper)
+		.on('touchmove', function (event) {
+			curTouchPoint.x = event.targetTouches[0].screenX;
+			curTouchPoint.y = event.targetTouches[0].screenY;
+			var dx = curTouchPoint.x - lastTouchPoint.x;
+			var dy = curTouchPoint.y - lastTouchPoint.y;
+			curPoint.x += dx;
+			curPoint.y += dy;
+			if (self.direction === 'horizontal') {
+				translate(wrapper, curPoint.x, 0);
+			} else {
+				translate(wrapper, 0, curPoint.y);
+			}
+			lastTouchPoint.x = curTouchPoint.x;
+			lastTouchPoint.y = curTouchPoint.y;
+		});
 
-	$(wrapper).on('touchend', function (event) {
-		// touchend的targetTouches是空的
-		curTouchPoint.x = event.changedTouches[0].screenX;
-		curTouchPoint.y = event.changedTouches[0].screenY;
-		// 本次滑动的距离
-		var distanceX = curTouchPoint.x - startTouchPoint.x;
-		var distanceY = curTouchPoint.y - startTouchPoint.y;
-		// alert(distanceX);
-		var multiple = 1;
-		if (self.direction === 'horizontal') {
-			if (self.activeIndex === 0 && distanceX > 0) {
-				curPoint.x = nextPoint.x = originStart.x;
-				curPoint.y = nextPoint.y = originStart.y;
-				$(this).addClass('transition');
-				translate(wrapper, nextPoint.x, nextPoint.y);
-				self.onSlideChangeEnd(self);
-				return;
-			} else if (self.activeIndex === slideCount - 1 && distanceX < 0) {
-				curPoint.x = nextPoint.x = originEnd.x;
-				curPoint.y = nextPoint.y = originEnd.y;
-				$(this).addClass('transition');
-				translate(wrapper, nextPoint.x, nextPoint.y);
-				self.onSlideChangeEnd(self);
-				return;
-			}
-			if (Math.abs(distanceX) < interval / 2) {
-				nextPoint.x = lastStaticPoint.x;
+	$(wrapper)
+		.on('touchend', function (event) {
+			// touchend的targetTouches是空的
+			curTouchPoint.x = event.changedTouches[0].screenX;
+			curTouchPoint.y = event.changedTouches[0].screenY;
+			// 本次滑动的距离
+			var distanceX = curTouchPoint.x - startTouchPoint.x;
+			var distanceY = curTouchPoint.y - startTouchPoint.y;
+			var multiple = 0;
+			if (self.direction === 'horizontal') {
+				multiple = operation.getMultiple(distanceX);
 			} else {
-				if (Math.abs(distanceX) % interval < interval / 2) {
-					multiple = Math.floor(Math.abs(distanceX) / interval);
-				} else {
-					multiple = Math.ceil(Math.abs(distanceX) / interval);
-				}
-				if (distanceX < 0) {
-					nextPoint.x = lastStaticPoint.x - multiple * interval;
-					_activeIndex += multiple;
-				} else {
-					nextPoint.x = lastStaticPoint.x + multiple * interval;
-					_activeIndex -= multiple;
-				}
+				multiple = operation.getMultiple(distanceY);
 			}
-		} else {
-			if (self.activeIndex === 0 && distanceY > 0) {
-				curPoint.x = nextPoint.x = originStart.x;
-				curPoint.y = nextPoint.y = originStart.y;
-				$(this).addClass('transition');
-				translate(wrapper, nextPoint.x, nextPoint.y);
-				self.onSlideChangeEnd(self);
-				return;
-			} else if (self.activeIndex === slideCount - 1 && distanceY < 0) {
-				curPoint.x = nextPoint.x = originEnd.x;
-				curPoint.y = nextPoint.y = originEnd.y;
-				$(this).addClass('transition');
-				translate(wrapper, nextPoint.x, nextPoint.y);
-				self.onSlideChangeEnd(self);
-				return;
-			}
-			if (Math.abs(distanceY) < interval / 2) {
-				nextPoint.y = lastStaticPoint.y;
+			if (self.activeIndex + multiple < 0) {
+				self.activeIndex = 0;
+			} else if (self.activeIndex + multiple > slideCount - 1) {
+				self.activeIndex = slideCount - 1;
 			} else {
-				if (Math.abs(distanceY) % interval < interval / 2) {
-					multiple = Math.floor(Math.abs(distanceY) / interval);
-				} else {
-					multiple = Math.ceil(Math.abs(distanceY) / interval);
-				}
-				if (distanceY < 0) {
-					nextPoint.y = lastStaticPoint.y - multiple * interval;
-					_activeIndex += multiple;
-				} else {
-					nextPoint.y = lastStaticPoint.y + multiple * interval;
-					_activeIndex -= multiple;
-				}
+				self.activeIndex += multiple;
 			}
-		}
-		curPoint.x = nextPoint.x;
-		curPoint.y = nextPoint.y;
-		$(this).addClass('transition');
-		translate(wrapper, nextPoint.x, nextPoint.y);
-		self.onSlideChangeEnd(self);
-	});
+			self.onSlideChangeEnd(self);
+		});
 
 	function transitionEnd(event) {
-		$(this).removeClass('transition');
+		$(this)
+			.removeClass('transition');
 		self.onTransitionEnd(self);
 	}
 
-	$(wrapper).on('transitionend', transitionEnd);
-	$(wrapper).on('webkitTransitionEnd', transitionEnd);
-	$(wrapper).on('oTransitionEnd', transitionEnd);
-	
+	$(wrapper)
+		.on('transitionend', transitionEnd);
+	$(wrapper)
+		.on('webkitTransitionEnd', transitionEnd);
+	$(wrapper)
+		.on('oTransitionEnd', transitionEnd);
+
 	return self;
 }
 
