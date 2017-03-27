@@ -106,6 +106,7 @@ function Swiper(opts) {
 		},
 		set: function (value) {
 			self.slideTo(value);
+			_activeIndex = value;
 		}
 	});
 	// 开始滑动的回调
@@ -162,6 +163,7 @@ function Swiper(opts) {
 	};
 
 	function translate(elem, x, y) {
+		/* eslint no-func-assign: 0 */
 		if (elem.style.transform != undefined) {
 			translate = function (elem, x, y) {
 				elem.style.transform = 'translate3d('+x+'px, '+y+'px, 0px)';
@@ -179,48 +181,85 @@ function Swiper(opts) {
 		Swiper.prototype.slideTo = function (slide) {
 			var ctx = this;
 			slide = slide % slideCount;
-			ctx.onSlideChangeStart(ctx);
-			_activeIndex = slide;
 			if (ctx.direction === 'horizontal') {
 				curPoint.x = nextPoint.x = originStart.x - slide * interval;
 			} else {
 				curPoint.y = nextPoint.y = originStart.y - slide * interval;
 			}
-			ctx.onSlideChangeEnd(ctx);
 			$(wrapper).addClass('transition');
 			translate(wrapper, nextPoint.x, nextPoint.y);
 		};
 	}
 
+	var operation = {
+		setHorizontalMargin: function (spaceBetween) {
+			slides.forEach(function (slide, idx, arr) {
+				if (idx === arr.length - 1) {
+					return;
+				}
+				slide.style.marginRight = spaceBetween + 'px';
+			});
+		},
+		setVerticalMargin: function (spaceBetween) {
+			slides.forEach(function (slide, idx, arr) {
+				if (idx === arr.length - 1) {
+					return;
+				}
+				slide.style.marginBottom = spaceBetween + 'px';
+			});
+		},
+		getBoxWidth: function (elem) {
+			var slideComputedSyle = getComputedStyle(elem);
+			var slideWidth = parseFloat(slideComputedSyle.width);
+			var slidePdLeft = parseFloat(slideComputedSyle.paddingLeft);
+			var slidePdRight = parseFloat(slideComputedSyle.paddingRight);
+			var slideBorderLeft = parseFloat(slideComputedSyle.borderLeftWidth);
+			var slideBorderRight = parseFloat(slideComputedSyle.borderRightWidth);
+			return slideWidth + slidePdLeft + slidePdRight + slideBorderLeft + slideBorderRight;
+		},
+		getBoxHeight: function (elem) {
+			var slideComputedSyle = getComputedStyle(elem);
+			var slideHeight = parseFloat(slideComputedSyle.height);
+			var slidePdTop = parseFloat(slideComputedSyle.paddingTop);
+			var slidePdBottom = parseFloat(slideComputedSyle.paddingBottom);
+			var slideBorderTop = parseFloat(slideComputedSyle.borderTopWidth);
+			var slideBorderBottom = parseFloat(slideComputedSyle.borderBottomWidth);
+			return slideHeight + slidePdTop + slidePdBottom + slideBorderTop + slideBorderBottom;
+		},
+		transformAxisX: function (slideBoxWidth) {
+			if (self.centeredSlides) {
+				// transform坐标系原点变换
+				originStart.x = (containerWidth - slideBoxWidth) / 2;
+				// transform坐标系变换，以originStart点为原点
+				curPoint.x = lastStaticPoint.x = nextPoint.x = originStart.x;
+			}
+			originEnd.x = originStart.x - (slideCount - 1) * interval;
+			curPoint.x -= self.initialSlide * interval;
+			lastStaticPoint.x = curPoint.x;
+		},
+		transformAxisY: function (slideBoxHeight) {
+			if (self.centeredSlides) {
+				// transform坐标系原点变换
+				originStart.y = (containerHeight - slideBoxHeight) / 2;
+				// transform坐标系变换，以originStart点为原点
+				curPoint.y = lastStaticPoint.y = nextPoint.y = originStart.y;
+			}
+			originEnd.y = originStart.y - (slideCount - 1) * interval;
+			curPoint.y -= self.initialSlide * interval;
+			lastStaticPoint.y = curPoint.y;
+		}
+	};
+
 	if (typeof Swiper.prototype.init != 'function') {
 		Swiper.prototype.init = function (opts) {
-			var ctx = this, slideComputedSyle;
+			var ctx = this;
 			if (ctx.direction === 'horizontal') {
 				if (ctx.spaceBetween) {
-					slides.forEach(function (slide, idx) {
-						if (idx === slides.length - 1) {
-							return;
-						}
-						slide.style.marginRight = ctx.spaceBetween + 'px';
-					});
+					operation.setHorizontalMargin(ctx.spaceBetween);
 				}
-				slideComputedSyle = getComputedStyle(slides[0]);
-				var slideWidth = parseFloat(slideComputedSyle.width);
-				var slidePdLeft = parseFloat(slideComputedSyle.paddingLeft);
-				var slidePdRight = parseFloat(slideComputedSyle.paddingRight);
-				var slideBorderLeft = parseFloat(slideComputedSyle.borderLeftWidth);
-				var slideBorderRight = parseFloat(slideComputedSyle.borderRightWidth);
-				var slideBoxWidth = slideWidth + slidePdLeft + slidePdRight + slideBorderLeft + slideBorderRight;
+				var slideBoxWidth = operation.getBoxWidth(slides[0]);
 				interval = slideBoxWidth + ctx.spaceBetween;
-				if (ctx.centeredSlides) {
-					// transform坐标系原点变换
-					originStart.x = (containerWidth - slideBoxWidth) / 2;
-					// transform坐标系变换，以originStart点为原点
-					curPoint.x = lastStaticPoint.x = nextPoint.x = originStart.x;
-				}
-				originEnd.x = originStart.x - (slideCount - 1) * interval;
-				curPoint.x -= ctx.initialSlide * interval;
-				lastStaticPoint.x = curPoint.x;
+				operation.transformAxisX(slideBoxWidth);
 				translate(wrapper, curPoint.x, 0);
 			} else if (ctx.direction === 'vertical') {
 				wrapper.addClass('swiper-wrapper-vertical');
@@ -228,30 +267,11 @@ function Swiper(opts) {
 					slide.addClass('swiper-slide-vertical');
 				});
 				if (ctx.spaceBetween) {
-					slides.forEach(function (slide, idx) {
-						if (idx === slides.length - 1) {
-							return;
-						}
-						slide.style.marginBottom = ctx.spaceBetween + 'px';
-					});
+					operation.setVerticalMargin(ctx.spaceBetween);
 				}
-				slideComputedSyle = getComputedStyle(slides[0]);
-				var slideHeight = parseFloat(slideComputedSyle.height);
-				var slidePdTop = parseFloat(slideComputedSyle.paddingTop);
-				var slidePdBottom = parseFloat(slideComputedSyle.paddingBottom);
-				var slideBorderTop = parseFloat(slideComputedSyle.borderTopWidth);
-				var slideBorderBottom = parseFloat(slideComputedSyle.borderBottomWidth);
-				var slideBoxHeight = slideHeight + slidePdTop + slidePdBottom + slideBorderTop + slideBorderBottom;
+				var slideBoxHeight = operation.getBoxHeight(slides[0]);
 				interval = slideBoxHeight + ctx.spaceBetween;
-				if (ctx.centeredSlides) {
-					// transform坐标系原点变换
-					originStart.y = (containerHeight - slideBoxHeight) / 2;
-					// transform坐标系变换，以originStart点为原点
-					curPoint.y = lastStaticPoint.y = nextPoint.y = originStart.y;
-				}
-				originEnd.y = originStart.y - (slideCount - 1) * interval;
-				curPoint.y -= ctx.initialSlide * interval;
-				lastStaticPoint.y = curPoint.y;
+				operation.transformAxisY(slideBoxHeight);
 				translate(wrapper, 0, curPoint.y);
 			}
 		};
@@ -290,7 +310,6 @@ function Swiper(opts) {
 		// 本次滑动的距离
 		var distanceX = curTouchPoint.x - startTouchPoint.x;
 		var distanceY = curTouchPoint.y - startTouchPoint.y;
-		console.log(distanceX);
 		// alert(distanceX);
 		var multiple = 1;
 		if (self.direction === 'horizontal') {
