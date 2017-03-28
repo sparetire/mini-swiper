@@ -6,6 +6,9 @@ $.ready(function () {
 		centeredSlides: true,
 		// initialSlide: 3,
 		spaceBetween: 20,
+		onInit: function (swiper) {
+			console.log('init');
+		},
 		onSlideChangeStart: function (swiper) {
 			console.log(swiper.activeIndex);
 		},

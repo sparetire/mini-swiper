@@ -109,12 +109,14 @@ function Swiper(opts) {
 			_activeIndex = value;
 		}
 	});
+	// 初始化结束的回调
+	var onInit = opts.onInit || function (swiper) {};
 	// 开始滑动的回调
-	self.onSlideChangeStart = opts.onSlideChangeStart || function (swiper) {};
+	var onSlideChangeStart = opts.onSlideChangeStart || function (swiper) {};
 	// 结束滑动的回调
-	self.onSlideChangeEnd = opts.onSlideChangeEnd || function (swiper) {};
+	var onSlideChangeEnd = opts.onSlideChangeEnd || function (swiper) {};
 	// 滑动过渡结束的回调
-	self.onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
+	var onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
 	// container 内容区的宽度，private
 	var containerWidth = parseFloat(getComputedStyle(self.el)
 		.width);
@@ -292,6 +294,7 @@ function Swiper(opts) {
 				operation.transformAxisY(slideBoxHeight);
 				translate(wrapper, 0, curPoint.y);
 			}
+			onInit(self);
 		};
 	}
 
@@ -303,7 +306,7 @@ function Swiper(opts) {
 			lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
 			lastStaticPoint.x = curPoint.x;
 			lastStaticPoint.y = curPoint.y;
-			self.onSlideChangeStart(self);
+			onSlideChangeStart(self);
 		});
 
 	$(wrapper)
@@ -344,13 +347,13 @@ function Swiper(opts) {
 			} else {
 				self.activeIndex += multiple;
 			}
-			self.onSlideChangeEnd(self);
+			onSlideChangeEnd(self);
 		});
 
 	function transitionEnd(event) {
 		$(this)
 			.removeClass('transition');
-		self.onTransitionEnd(self);
+		onTransitionEnd(self);
 	}
 
 	$(wrapper)
