@@ -335,9 +335,12 @@ function Swiper(opts) {
 			var distanceX = curTouchPoint.x - startTouchPoint.x;
 			var distanceY = curTouchPoint.y - startTouchPoint.y;
 			var multiple = 0;
+			var isStatic = false;
 			if (self.direction === 'horizontal') {
+				Math.abs(distanceX) < 1 && (isStatic = true);
 				multiple = operation.getMultiple(distanceX);
 			} else {
+				Math.abs(distanceX) < 1 && (isStatic = true);
 				multiple = operation.getMultiple(distanceY);
 			}
 			if (self.activeIndex + multiple < 0) {
@@ -346,6 +349,9 @@ function Swiper(opts) {
 				self.activeIndex = slideCount - 1;
 			} else {
 				self.activeIndex += multiple;
+			}
+			if (isStatic) {
+				wrapper.removeClass('transition');
 			}
 			onSlideChangeEnd(self);
 		});

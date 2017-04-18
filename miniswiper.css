@@ -16,11 +16,13 @@
 
 .swiper-slide {
 	font-size: 14px;
+	vertical-align: bottom;
 	display: inline-block;
 }
 
 .swiper-slide-vertical {
 	font-size: 14px;
+	vertical-align: baseline;
 	display: block;
 }
 
