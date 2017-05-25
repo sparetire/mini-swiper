@@ -1,0 +1,6 @@
+.npmignore
+.eslintrc.js
+.eslintignore
+.jsbeautifyrc
+.vscode
+node_modules

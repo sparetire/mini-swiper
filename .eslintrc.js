@@ -2,12 +2,11 @@ module.exports = {
 	env: {
 		'browser': true,
 		'es6': true,
-		'node': true,
 		'commonjs': true,
 		'amd': true,
 		'jquery': true
 	},
-	parser: 'espree',
+	parser: 'babel-eslint',
 	parserOptions: {
 		ecmaVersion: 6,
 		sourceType: 'module',
@@ -26,6 +25,9 @@ module.exports = {
 			vars: 'local',
 			args: 'none'
 		}],
+		'no-extra-semi': 'warn',
+		'no-func-assign': 'warn',
+		'no-empty': 'warn',
 		'camelcase': ['error', {
 			properties: 'always'
 		}],
