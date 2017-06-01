@@ -17,6 +17,7 @@
 .swiper-slide {
 	font-size: 14px;
 	vertical-align: bottom;
+	white-space: normal;
 	display: inline-block;
 }
 
