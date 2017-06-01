@@ -17,7 +17,7 @@
 					supportsPassive = true;
 				}
 			});
-			window.addEventListener("test", null, opts);
+			window.addEventListener('test', null, opts);
 		} catch (e) {}
 
 		var $ = function (elem) {
@@ -108,13 +108,26 @@
 		// 当前slide的索引
 		var _activeIndex = self.initialSlide;
 
+		function slideTo(slide) {
+			var ctx = self;
+			slide = slide % slideCount;
+			if (ctx.direction === 'horizontal') {
+				curPoint.x = nextPoint.x = originStart.x - slide * interval;
+			} else {
+				curPoint.y = nextPoint.y = originStart.y - slide * interval;
+			}
+			$(wrapper)
+				.addClass('transition');
+			translate(wrapper, nextPoint.x, nextPoint.y);
+		}
+
 		// 当前slide的索引，修改此变量会引起滑动
 		Object.defineProperty(self, 'activeIndex', {
 			get: function () {
 				return _activeIndex;
 			},
 			set: function (value) {
-				self.slideTo(value);
+				slideTo(value);
 				_activeIndex = value;
 			}
 		});
@@ -191,20 +204,6 @@
 		}
 
 
-		if (typeof Swiper.prototype.slideTo != 'function') {
-			Swiper.prototype.slideTo = function (slide) {
-				var ctx = this;
-				slide = slide % slideCount;
-				if (ctx.direction === 'horizontal') {
-					curPoint.x = nextPoint.x = originStart.x - slide * interval;
-				} else {
-					curPoint.y = nextPoint.y = originStart.y - slide * interval;
-				}
-				$(wrapper)
-					.addClass('transition');
-				translate(wrapper, nextPoint.x, nextPoint.y);
-			};
-		}
 
 		var operation = {
 			setHorizontalMargin: function (spaceBetween) {
@@ -224,22 +223,22 @@
 				});
 			},
 			getBoxWidth: function (elem) {
-				var slideComputedSyle = getComputedStyle(elem);
-				var slideWidth = parseFloat(slideComputedSyle.width);
-				var slidePdLeft = parseFloat(slideComputedSyle.paddingLeft);
-				var slidePdRight = parseFloat(slideComputedSyle.paddingRight);
-				var slideBorderLeft = parseFloat(slideComputedSyle.borderLeftWidth);
-				var slideBorderRight = parseFloat(slideComputedSyle.borderRightWidth);
+				var slideComputedStyle = getComputedStyle(elem);
+				var slideWidth = parseFloat(slideComputedStyle.width);
+				var slidePdLeft = parseFloat(slideComputedStyle.paddingLeft);
+				var slidePdRight = parseFloat(slideComputedStyle.paddingRight);
+				var slideBorderLeft = parseFloat(slideComputedStyle.borderLeftWidth);
+				var slideBorderRight = parseFloat(slideComputedStyle.borderRightWidth);
 				return slideWidth + slidePdLeft + slidePdRight + slideBorderLeft +
 					slideBorderRight;
 			},
 			getBoxHeight: function (elem) {
-				var slideComputedSyle = getComputedStyle(elem);
-				var slideHeight = parseFloat(slideComputedSyle.height);
-				var slidePdTop = parseFloat(slideComputedSyle.paddingTop);
-				var slidePdBottom = parseFloat(slideComputedSyle.paddingBottom);
-				var slideBorderTop = parseFloat(slideComputedSyle.borderTopWidth);
-				var slideBorderBottom = parseFloat(slideComputedSyle.borderBottomWidth);
+				var slideComputedStyle = getComputedStyle(elem);
+				var slideHeight = parseFloat(slideComputedStyle.height);
+				var slidePdTop = parseFloat(slideComputedStyle.paddingTop);
+				var slidePdBottom = parseFloat(slideComputedStyle.paddingBottom);
+				var slideBorderTop = parseFloat(slideComputedStyle.borderTopWidth);
+				var slideBorderBottom = parseFloat(slideComputedStyle.borderBottomWidth);
 				return slideHeight + slidePdTop + slidePdBottom + slideBorderTop +
 					slideBorderBottom;
 			},
@@ -304,7 +303,7 @@
 				translate(wrapper, 0, curPoint.y);
 			}
 			onInit(self);
-		};
+		}
 
 		init();
 
