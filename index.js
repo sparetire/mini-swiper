@@ -280,35 +280,33 @@
 			}
 		};
 
-		if (typeof Swiper.prototype.init != 'function') {
-			Swiper.prototype.init = function (opts) {
-				var ctx = this;
-				if (ctx.direction === 'horizontal') {
-					if (ctx.spaceBetween) {
-						operation.setHorizontalMargin(ctx.spaceBetween);
-					}
-					var slideBoxWidth = operation.getBoxWidth(slides[0]);
-					interval = slideBoxWidth + ctx.spaceBetween;
-					operation.transformAxisX(slideBoxWidth);
-					translate(wrapper, curPoint.x, 0);
-				} else if (ctx.direction === 'vertical') {
-					wrapper.addClass('swiper-wrapper-vertical');
-					slides.forEach(function (slide) {
-						slide.addClass('swiper-slide-vertical');
-					});
-					if (ctx.spaceBetween) {
-						operation.setVerticalMargin(ctx.spaceBetween);
-					}
-					var slideBoxHeight = operation.getBoxHeight(slides[0]);
-					interval = slideBoxHeight + ctx.spaceBetween;
-					operation.transformAxisY(slideBoxHeight);
-					translate(wrapper, 0, curPoint.y);
+		function init(opts) {
+			var ctx = self;
+			if (ctx.direction === 'horizontal') {
+				if (ctx.spaceBetween) {
+					operation.setHorizontalMargin(ctx.spaceBetween);
 				}
-				onInit(self);
-			};
-		}
+				var slideBoxWidth = operation.getBoxWidth(slides[0]);
+				interval = slideBoxWidth + ctx.spaceBetween;
+				operation.transformAxisX(slideBoxWidth);
+				translate(wrapper, curPoint.x, 0);
+			} else if (ctx.direction === 'vertical') {
+				wrapper.addClass('swiper-wrapper-vertical');
+				slides.forEach(function (slide) {
+					slide.addClass('swiper-slide-vertical');
+				});
+				if (ctx.spaceBetween) {
+					operation.setVerticalMargin(ctx.spaceBetween);
+				}
+				var slideBoxHeight = operation.getBoxHeight(slides[0]);
+				interval = slideBoxHeight + ctx.spaceBetween;
+				operation.transformAxisY(slideBoxHeight);
+				translate(wrapper, 0, curPoint.y);
+			}
+			onInit(self);
+		};
 
-		self.init();
+		init();
 
 		$(wrapper)
 			.on('touchstart', function (event) {
