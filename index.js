@@ -150,7 +150,7 @@
 		// 所有的slide元素数组,private
 		var slides = Array.prototype.slice.call(wrapper.find('.swiper-slide')) || [];
 		// slide的个数，private
-		var slideCount = slides.length;
+		var slideCount = self.slideCount = slides.length;
 		// 每个单元的元素大小，在方向的大小，算margin border padding，private
 		var interval = 0;
 		// wrapper在transform坐标系中起始临界点, private
