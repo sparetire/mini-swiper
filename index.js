@@ -187,6 +187,7 @@
 			x: 0,
 			y: 0
 		};
+		var sensitivity = opts.sensitivity || 2;
 
 		function translate(elem, x, y) {
 			/* eslint no-func-assign: 0 */
@@ -271,7 +272,7 @@
 				} else if (distance > 0) {
 					v = -1;
 				}
-				if (Math.abs(distance) % interval < interval / 2) {
+				if (Math.abs(distance) % interval < interval / sensitivity) {
 					return Math.floor(Math.abs(distance) / interval) * v;
 				} else {
 					return Math.ceil(Math.abs(distance) / interval) * v;
