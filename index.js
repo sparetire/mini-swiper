@@ -140,11 +140,9 @@
 		// 滑动过渡结束的回调
 		var onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
 		// container 内容区的宽度，private
-		var containerWidth = parseFloat(getComputedStyle(self.el)
-			.width);
+		var containerWidth = opts.slideWidth ? opts.slideWidth : parseFloat(getComputedStyle(self.el).width);
 		// container 内容区的高度，private
-		var containerHeight = parseFloat(getComputedStyle(self.el)
-			.height);
+		var containerHeight = opts.slideHeight ? opts.slideHeight : parseFloat(getComputedStyle(self.el).height);
 		// wrapper dom对象，private
 		var wrapper = this.el.find('.swiper-wrapper')[0];
 		// 所有的slide元素数组,private
