@@ -384,6 +384,11 @@
 			.on('webkitTransitionEnd', transitionEnd);
 		$(wrapper)
 			.on('oTransitionEnd', transitionEnd);
+		
+		// todo 临时方案，到时候实现一个代理
+		self.setSlideCount = function (count) {
+			slideCount = count;
+		};
 
 		return self;
 	}
