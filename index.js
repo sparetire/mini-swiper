@@ -226,8 +226,11 @@
 				});
 			},
 			getBoxWidth: function (elem) {
+				if (_slideWidth) {
+					return _slideWidth;
+				}
 				var slideComputedStyle = getComputedStyle(elem);
-				var slideWidth = _slideWidth || parseFloat(slideComputedStyle.width);
+				var slideWidth = parseFloat(slideComputedStyle.width);
 				var slidePdLeft = parseFloat(slideComputedStyle.paddingLeft);
 				var slidePdRight = parseFloat(slideComputedStyle.paddingRight);
 				var slideBorderLeft = parseFloat(slideComputedStyle.borderLeftWidth);
@@ -236,8 +239,11 @@
 					slideBorderRight;
 			},
 			getBoxHeight: function (elem) {
+				if (_slideHeight) {
+					return _slideHeight;
+				}
 				var slideComputedStyle = getComputedStyle(elem);
-				var slideHeight = _slideHeight || parseFloat(slideComputedStyle.height);
+				var slideHeight = parseFloat(slideComputedStyle.height);
 				var slidePdTop = parseFloat(slideComputedStyle.paddingTop);
 				var slidePdBottom = parseFloat(slideComputedStyle.paddingBottom);
 				var slideBorderTop = parseFloat(slideComputedStyle.borderTopWidth);
