@@ -140,9 +140,13 @@
 		// 滑动过渡结束的回调
 		var onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
 		// container 内容区的宽度，private
-		var containerWidth = opts.slideWidth ? opts.slideWidth : parseFloat(getComputedStyle(self.el).width);
+		var containerWidth = opts.containerWidth || parseFloat(getComputedStyle(self.el).width);
 		// container 内容区的高度，private
-		var containerHeight = opts.slideHeight ? opts.slideHeight : parseFloat(getComputedStyle(self.el).height);
+		var containerHeight = opts.containerHeight || parseFloat(getComputedStyle(self.el).height);
+		// slide的宽度
+		var _slideWidth = opts.slideWidth;
+		// slide的高度
+		var _slideHeight = opts.slideHeight;
 		// wrapper dom对象，private
 		var wrapper = this.el.find('.swiper-wrapper')[0];
 		// 所有的slide元素数组,private
@@ -223,7 +227,7 @@
 			},
 			getBoxWidth: function (elem) {
 				var slideComputedStyle = getComputedStyle(elem);
-				var slideWidth = parseFloat(slideComputedStyle.width);
+				var slideWidth = _slideWidth || parseFloat(slideComputedStyle.width);
 				var slidePdLeft = parseFloat(slideComputedStyle.paddingLeft);
 				var slidePdRight = parseFloat(slideComputedStyle.paddingRight);
 				var slideBorderLeft = parseFloat(slideComputedStyle.borderLeftWidth);
@@ -233,7 +237,7 @@
 			},
 			getBoxHeight: function (elem) {
 				var slideComputedStyle = getComputedStyle(elem);
-				var slideHeight = parseFloat(slideComputedStyle.height);
+				var slideHeight = _slideHeight || parseFloat(slideComputedStyle.height);
 				var slidePdTop = parseFloat(slideComputedStyle.paddingTop);
 				var slidePdBottom = parseFloat(slideComputedStyle.paddingBottom);
 				var slideBorderTop = parseFloat(slideComputedStyle.borderTopWidth);
