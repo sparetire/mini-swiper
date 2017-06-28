@@ -101,7 +101,7 @@
 		// autoplay -> number
 		self.autoplay = null;
 		// slide的间隔margin
-		self.spaceBetween = opts.spaceBetween;
+		self.spaceBetween = opts.spaceBetween || 0;
 		// 起始的slide索引
 		self.initialSlide = opts.initialSlide || 0;
 
