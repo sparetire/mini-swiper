@@ -1,6 +1,6 @@
 {
   "name": "mini-swiper",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A mini swiper for mobile",
   "main": "index.js",
   "scripts": {
