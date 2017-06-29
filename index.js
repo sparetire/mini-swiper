@@ -127,7 +127,9 @@
 				return _activeIndex;
 			},
 			set: function (value) {
+				onSlideChangeStart(self);
 				slideTo(value);
+				onSlideChangeEnd(self);
 				_activeIndex = value;
 			}
 		});
@@ -322,7 +324,6 @@
 				lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
 				lastStaticPoint.x = curPoint.x;
 				lastStaticPoint.y = curPoint.y;
-				onSlideChangeStart(self);
 			});
 
 		$(wrapper)
@@ -369,7 +370,6 @@
 				if (isStatic) {
 					wrapper.removeClass('transition');
 				}
-				onSlideChangeEnd(self);
 			});
 
 		function transitionEnd(event) {
