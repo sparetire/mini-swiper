@@ -129,8 +129,8 @@
 			set: function (value) {
 				onSlideChangeStart(self);
 				slideTo(value);
-				onSlideChangeEnd(self);
 				_activeIndex = value;
+				onSlideChangeEnd(self);
 			}
 		});
 		// 初始化结束的回调
