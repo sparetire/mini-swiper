@@ -142,9 +142,13 @@
 		// 滑动过渡结束的回调
 		var onTransitionEnd = opts.onTransitionEnd || function (swiper) {};
 		// container 内容区的宽度，private
-		var containerWidth = opts.containerWidth || parseFloat(getComputedStyle(self.el).width);
+		var containerWidth = opts.containerWidth || parseFloat(getComputedStyle(self
+				.el)
+			.width);
 		// container 内容区的高度，private
-		var containerHeight = opts.containerHeight || parseFloat(getComputedStyle(self.el).height);
+		var containerHeight = opts.containerHeight || parseFloat(getComputedStyle(
+				self.el)
+			.height);
 		// slide的宽度
 		var _slideWidth = opts.slideWidth;
 		// slide的高度
@@ -157,6 +161,8 @@
 		var slideCount = self.slideCount = slides.length;
 		// 每个单元的元素大小，在方向的大小，算margin border padding，private
 		var interval = 0;
+		// 是否允许手动滑动
+		var canSwipe = typeof opts.canSwipe === 'boolean' ? opts.canSwipe : true;
 		// wrapper在transform坐标系中起始临界点, private
 		var originStart = {
 			x: 0,
@@ -318,59 +324,62 @@
 
 		init();
 
-		$(wrapper)
-			.on('touchstart', function (event) {
-				lastTouchPoint.x = startTouchPoint.x = event.targetTouches[0].screenX;
-				lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
-				lastStaticPoint.x = curPoint.x;
-				lastStaticPoint.y = curPoint.y;
-			});
+		if (canSwipe) {
+			$(wrapper)
+				.on('touchstart', function (event) {
+					lastTouchPoint.x = startTouchPoint.x = event.targetTouches[0].screenX;
+					lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
+					lastStaticPoint.x = curPoint.x;
+					lastStaticPoint.y = curPoint.y;
+				});
 
-		$(wrapper)
-			.on('touchmove', function (event) {
-				curTouchPoint.x = event.targetTouches[0].screenX;
-				curTouchPoint.y = event.targetTouches[0].screenY;
-				var dx = curTouchPoint.x - lastTouchPoint.x;
-				var dy = curTouchPoint.y - lastTouchPoint.y;
-				curPoint.x += dx;
-				curPoint.y += dy;
-				if (self.direction === 'horizontal') {
-					translate(wrapper, curPoint.x, 0);
-				} else {
-					translate(wrapper, 0, curPoint.y);
-				}
-				lastTouchPoint.x = curTouchPoint.x;
-				lastTouchPoint.y = curTouchPoint.y;
-			});
+			$(wrapper)
+				.on('touchmove', function (event) {
+					curTouchPoint.x = event.targetTouches[0].screenX;
+					curTouchPoint.y = event.targetTouches[0].screenY;
+					var dx = curTouchPoint.x - lastTouchPoint.x;
+					var dy = curTouchPoint.y - lastTouchPoint.y;
+					curPoint.x += dx;
+					curPoint.y += dy;
+					if (self.direction === 'horizontal') {
+						translate(wrapper, curPoint.x, 0);
+					} else {
+						translate(wrapper, 0, curPoint.y);
+					}
+					lastTouchPoint.x = curTouchPoint.x;
+					lastTouchPoint.y = curTouchPoint.y;
+				});
 
-		$(wrapper)
-			.on('touchend', function (event) {
-				// touchend的targetTouches是空的
-				curTouchPoint.x = event.changedTouches[0].screenX;
-				curTouchPoint.y = event.changedTouches[0].screenY;
-				// 本次滑动的距离
-				var distanceX = curTouchPoint.x - startTouchPoint.x;
-				var distanceY = curTouchPoint.y - startTouchPoint.y;
-				var multiple = 0;
-				var isStatic = false;
-				if (self.direction === 'horizontal') {
-					Math.abs(distanceX) < 1 && (isStatic = true);
-					multiple = operation.getMultiple(distanceX);
-				} else {
-					Math.abs(distanceX) < 1 && (isStatic = true);
-					multiple = operation.getMultiple(distanceY);
-				}
-				if (self.activeIndex + multiple < 0) {
-					self.activeIndex = 0;
-				} else if (self.activeIndex + multiple > slideCount - 1) {
-					self.activeIndex = slideCount - 1;
-				} else {
-					self.activeIndex += multiple;
-				}
-				if (isStatic) {
-					wrapper.removeClass('transition');
-				}
-			});
+			$(wrapper)
+				.on('touchend', function (event) {
+					// touchend的targetTouches是空的
+					curTouchPoint.x = event.changedTouches[0].screenX;
+					curTouchPoint.y = event.changedTouches[0].screenY;
+					// 本次滑动的距离
+					var distanceX = curTouchPoint.x - startTouchPoint.x;
+					var distanceY = curTouchPoint.y - startTouchPoint.y;
+					var multiple = 0;
+					var isStatic = false;
+					if (self.direction === 'horizontal') {
+						Math.abs(distanceX) < 1 && (isStatic = true);
+						multiple = operation.getMultiple(distanceX);
+					} else {
+						Math.abs(distanceX) < 1 && (isStatic = true);
+						multiple = operation.getMultiple(distanceY);
+					}
+					if (self.activeIndex + multiple < 0) {
+						self.activeIndex = 0;
+					} else if (self.activeIndex + multiple > slideCount - 1) {
+						self.activeIndex = slideCount - 1;
+					} else {
+						self.activeIndex += multiple;
+					}
+					if (isStatic) {
+						wrapper.removeClass('transition');
+					}
+				});
+		}
+
 
 		function transitionEnd(event) {
 			$(this)
@@ -384,7 +393,7 @@
 			.on('webkitTransitionEnd', transitionEnd);
 		$(wrapper)
 			.on('oTransitionEnd', transitionEnd);
-		
+
 		// todo 临时方案，到时候实现一个代理
 		self.setSlideCount = function (count) {
 			slideCount = count;
