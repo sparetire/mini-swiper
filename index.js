@@ -112,8 +112,14 @@
 			var ctx = self;
 			slide = slide % slideCount;
 			if (ctx.direction === 'horizontal') {
+				if (curPoint.x == nextPoint.x) {
+					return;
+				}
 				curPoint.x = nextPoint.x = originStart.x - slide * interval;
 			} else {
+				if (curPoint.x == nextPoint.x) {
+					return;
+				}
 				curPoint.y = nextPoint.y = originStart.y - slide * interval;
 			}
 			$(wrapper)
