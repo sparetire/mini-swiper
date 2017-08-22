@@ -108,18 +108,14 @@
 		// 当前slide的索引
 		var _activeIndex = self.initialSlide;
 
+		var isTouching = false;
+
 		function slideTo(slide) {
 			var ctx = self;
 			slide = slide % slideCount;
 			if (ctx.direction === 'horizontal') {
-				if (curPoint.x == nextPoint.x) {
-					return;
-				}
 				curPoint.x = nextPoint.x = originStart.x - slide * interval;
 			} else {
-				if (curPoint.x == nextPoint.x) {
-					return;
-				}
 				curPoint.y = nextPoint.y = originStart.y - slide * interval;
 			}
 			$(wrapper)
@@ -133,6 +129,9 @@
 				return _activeIndex;
 			},
 			set: function (value) {
+				if (value == _activeIndex && !isTouching) {
+					return;
+				}
 				onSlideChangeStart(self);
 				slideTo(value);
 				_activeIndex = value;
@@ -333,6 +332,7 @@
 		if (canSwipe) {
 			$(wrapper)
 				.on('touchstart', function (event) {
+					isTouching = true;
 					lastTouchPoint.x = startTouchPoint.x = event.targetTouches[0].screenX;
 					lastTouchPoint.y = startTouchPoint.y = event.targetTouches[0].screenY;
 					lastStaticPoint.x = curPoint.x;
@@ -358,6 +358,7 @@
 
 			$(wrapper)
 				.on('touchend', function (event) {
+					isTouching = false;
 					// touchend的targetTouches是空的
 					curTouchPoint.x = event.changedTouches[0].screenX;
 					curTouchPoint.y = event.changedTouches[0].screenY;
