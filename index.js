@@ -358,7 +358,6 @@
 
 			$(wrapper)
 				.on('touchend', function (event) {
-					isTouching = false;
 					// touchend的targetTouches是空的
 					curTouchPoint.x = event.changedTouches[0].screenX;
 					curTouchPoint.y = event.changedTouches[0].screenY;
@@ -384,6 +383,7 @@
 					if (isStatic) {
 						wrapper.removeClass('transition');
 					}
+					isTouching = false;
 				});
 		}
 
